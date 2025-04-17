@@ -49,7 +49,6 @@ Main:
     Call    FuncSet         
     Call    DispCon         
     Call    EntryMode       
-      
     SetB    RS              
     Mov     DPTR,#LUT1      
 Print1:  
