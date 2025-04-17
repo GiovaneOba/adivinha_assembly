@@ -4,48 +4,48 @@
        
       ; ---------------------------------- Main -------------------------------------
       Main:                                           
-0000|         Clr     RS                     
-0002|         Call    FuncSet         
-0004|         Call    DispCon         
-0006|         Call    EntryMode       
+         Clr     RS                     
+         Call    FuncSet         
+         Call    DispCon         
+         Call    EntryMode       
        
-0008|         SetB    RS              
-000A|         Mov     DPTR,#LUT1      
-000D| Print1:  Clr     A               
-000E|         Movc    A,@A+DPTR       
-000F|         JZ      NextLine        
-0011|         Call    SendChar        
-0013|         Inc     DPTR            
-0014|         Jmp     Print1          
+         SetB    RS              
+         Mov     DPTR,#LUT1      
+ Print1:  Clr     A               
+         Movc    A,@A+DPTR       
+         JZ      NextLine        
+         Call    SendChar        
+         Inc     DPTR            
+         Jmp     Print1          
        
       NextLine:
-0016|         Call    CursorPos       
-0018|         SetB    RS              
-001A|         Mov     DPTR,#LUT2      
-001D| Print2:  Clr     A
-001E|         Movc    A,@A+DPTR       
-001F|         JZ      WaitStart       
-0021|         Call    SendChar        
-0023|         Inc     DPTR
-0024|         Jmp     Print2          
+         Call    CursorPos       
+         SetB    RS              
+         Mov     DPTR,#LUT2      
+ Print2:  Clr     A
+         Movc    A,@A+DPTR       
+         JZ      WaitStart       
+         Call    SendChar        
+         Inc     DPTR
+         Jmp     Print2          
        
       WaitStart:
-0026|         Call    ScanKeyPad      
-0028|         CJNE    R7,#'1',WaitStart 
-002B|         Clr     RS              
-002D|         Mov     A,#01h          
-002F|         Call    SendChar        
+         Call    ScanKeyPad      
+         CJNE    R7,#'1',WaitStart 
+         Clr     RS              
+         Mov     A,#01h          
+         Call    SendChar        
        
       ; ----------------------------- Escaneia as teclas -------------------------------
-0031| Next:   Call    ScanKeyPad      
-0033|         SetB    RS              
-0035|         Clr     A
-0036|         Mov     A,R7            
-0037|         Call    SendChar        
-0039|         CJNE    R7,#'#',Next    
+ Next:   Call    ScanKeyPad      
+         SetB    RS              
+         Clr     A
+         Mov     A,R7            
+         Call    SendChar        
+         CJNE    R7,#'#',Next    
               
       EndHere:
-003C|         Jmp     $               
+         Jmp     $               
        
       ;------------------------------ *Fim da Main* -----------------------------------
        
