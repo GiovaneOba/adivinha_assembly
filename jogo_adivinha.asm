@@ -1,247 +1,245 @@
-                              Org     0000h          
-      RS                      Equ     P1.3           
-      E                       Equ     P1.2           
+ORG 0000h          
+RS EQU P1.3           
+E EQU P1.2           
        
-      ; ---------------------------------- Main -------------------------------------
-      Main:                                           
-         Clr     RS                     
-         Call    FuncSet         
-         Call    DispCon         
-         Call    EntryMode       
+; ---------------------------------- Main -------------------------------------
+Main:                                           
+        CLR RS                     
+        CALL FuncSet         
+        CALL DispCon         
+        CALL EntryMode       
        
+        SetB RS              
+        MOV     DPTR,#LINHA1      
+EscreveLinha1: CLR     A               
+        MOVC    A,@A+DPTR       
+        JZ      ProximaLinha        
+        CALL    SendChar        
+        INC     DPTR            
+        JMP     EscreveLinha1          
+       
+ProximaLinha:
+        CALL    CursorPos       
+        SetB    RS              
+        MOV     DPTR,#LINHA2      
+EscreveLinha2: CLR     A
+        MOVC    A,@A+DPTR       
+        JZ      AguardaComecar       
+        CALL    SendChar        
+        INC     DPTR
+        JMP     EscreveLinha2          
+       
+AguardaComecar:
+        CALL    ScanKeyPad      
+        CJNE    R7,#'1',AguardaComecar 
+        CLR     RS              
+        MOV     A,#01h          
+        CALL    SendChar        
+       
+; ----------------------------- Escaneia as teclas -------------------------------
+Proximo: CALL    ScanKeyPad      
          SetB    RS              
-         Mov     DPTR,#LUT1      
- Print1:  Clr     A               
-         Movc    A,@A+DPTR       
-         JZ      NextLine        
-         Call    SendChar        
-         Inc     DPTR            
-         Jmp     Print1          
-       
-      NextLine:
-         Call    CursorPos       
-         SetB    RS              
-         Mov     DPTR,#LUT2      
- Print2:  Clr     A
-         Movc    A,@A+DPTR       
-         JZ      WaitStart       
-         Call    SendChar        
-         Inc     DPTR
-         Jmp     Print2          
-       
-      WaitStart:
-         Call    ScanKeyPad      
-         CJNE    R7,#'1',WaitStart 
-         Clr     RS              
-         Mov     A,#01h          
-         Call    SendChar        
-       
-      ; ----------------------------- Escaneia as teclas -------------------------------
- Next:   Call    ScanKeyPad      
-         SetB    RS              
-         Clr     A
-         Mov     A,R7            
-         Call    SendChar        
-         CJNE    R7,#'#',Next    
+         CLR     A
+         MOV     A,R7            
+         CALL    SendChar        
+         CJNE    R7,#'#',Proximo    
               
-      EndHere:
-         Jmp     $               
-       
-      ;------------------------------ *Fim da Main* -----------------------------------
-       
-      ;--------------------------------- Sub-rotinas ----------------------------------
-      ; LCD
-FuncSet:
-        Clr     P1.7            
-        Clr     P1.6
-        SetB    P1.5            
-        Clr     P1.4            
-        Call    Pulse           
+EndHere:
+        JMP     $               
+;------------------------------ *Fim da Main* -----------------------------------
 
-        Call    Delay           
-        Call    Pulse           
+
+;--------------------------------- Sub-rotinas ----------------------------------
+FuncSet:
+        CLR     P1.7            
+        CLR     P1.6
+        SetB    P1.5            
+        CLR     P1.4            
+        CALL    Pulse           
+
+        CALL    Delay           
+        CALL    Pulse           
 
         SetB    P1.7            
-        Clr     P1.6
-        Clr     P1.5
-        Clr     P1.4
-        Call    Pulse           
-        Call    Delay           
-        Ret
+        CLR     P1.6
+        CLR     P1.5
+        CLR     P1.4
+        CALL    Pulse           
+        CALL    Delay           
+        RET
 
 ; Liga cursor
 DispCon:
-        Clr     P1.7            
-        Clr     P1.6
-        Clr     P1.5
-        Clr     P1.4
-        Call    Pulse
+        CLR     P1.7            
+        CLR     P1.6
+        CLR     P1.5
+        CLR     P1.4
+        CALL    Pulse
 
         SetB    P1.7            
         SetB    P1.6
         SetB    P1.5
         SetB    P1.4
-        Call    Pulse
-        Call    Delay           
-        Ret
+        CALL    Pulse
+        CALL    Delay           
+        RET
 
 EntryMode:
-        Clr     P1.7            
-        Clr     P1.6
-        Clr     P1.5
-        Clr     P1.4
-        Call    Pulse
+        CLR     P1.7            
+        CLR     P1.6
+        CLR     P1.5
+        CLR     P1.4
+        CALL    Pulse
 
-        Clr     P1.7            
+        CLR     P1.7            
         SetB    P1.6
         SetB    P1.5
-        Clr     P1.4
-        Call    Pulse
-        Call    Delay
-        Ret
+        CLR     P1.4
+        CALL    Pulse
+        CALL    Delay
+        RET
 
 CursorPos:
-        Clr     RS              
+        CLR     RS              
         SetB    P1.7            
         SetB    P1.6
-        Clr     P1.5
-        Clr     P1.4
-        Call    Pulse           
-        Clr     P1.7            
-        Clr     P1.6
-        Clr     P1.5
-        Clr     P1.4
-        Call    Pulse           
-        Call    Delay           
-        Ret
+        CLR     P1.5
+        CLR     P1.4
+        CALL    Pulse           
+        CLR     P1.7            
+        CLR     P1.6
+        CLR     P1.5
+        CLR     P1.4
+        CALL    Pulse           
+        CALL    Delay        
+        RET
 
 Pulse:
         SetB    E               
-        Clr     E               
-        Ret
+        CLR     E               
+        RET
 
 SendChar:
-        Mov     C,ACC.7
-        Mov     P1.7,C
-        Mov     C,ACC.6
-        Mov     P1.6,C
-        Mov     C,ACC.5
-        Mov     P1.5,C
-        Mov     C,ACC.4
-        Mov     P1.4,C
-        Call    Pulse           
+        MOV     C,ACC.7
+        MOV     P1.7,C
+        MOV     C,ACC.6
+        MOV     P1.6,C
+        MOV     C,ACC.5
+        MOV     P1.5,C
+        MOV     C,ACC.4
+        MOV     P1.4,C
+        CALL    Pulse           
 
-        Mov     C,ACC.3
-        Mov     P1.7,C
-        Mov     C,ACC.2
-        Mov     P1.6,C
-        Mov     C,ACC.1
-        Mov     P1.5,C
-        Mov     C,ACC.0
-        Mov     P1.4,C
-        Call    Pulse           
+        MOV     C,ACC.3
+        MOV     P1.7,C
+        MOV     C,ACC.2
+        MOV     P1.6,C
+        MOV     C,ACC.1
+        MOV     P1.5,C
+        MOV     C,ACC.0
+        MOV     P1.4,C
+        CALL    Pulse           
 
-        Call    Delay           
-        Ret
+        CALL    Delay           
+        RET
 
 Delay:
-        Mov     R0,#50          
+        MOV     R0,#50          
 	DJNZ    R0,$         
-        Ret
+        RET
 
 ScanKeyPad:
         CLR     P0.3            
         CALL    IDCode0         
         SETB    P0.3            
-        JB      F0,Done         
+        JB      F0,Feito         
 
         CLR     P0.2            
         CALL    IDCode1         
         SETB    P0.2            
-        JB      F0,Done         
+        JB      F0,Feito         
 
         CLR     P0.1            
         CALL    IDCode2         
         SETB    P0.1            
-        JB      F0,Done         
+        JB      F0,Feito         
 
         CLR     P0.0            
         CALL    IDCode3         
         SETB    P0.0            
-        JB      F0,Done         
-
+        JB      F0,Feito         
+	CALL    Delay
         JMP     ScanKeyPad      
 
-Done:   CLR     F0              
-        Ret
+Feito:   CLR     F0              
+        RET
 
 IDCode0:        
-        JNB P0.4,KeyCode03     
-        JNB P0.5,KeyCode13     
-        JNB P0.6,KeyCode23     
-        Ret
+        JNB P0.4,Tecla03     
+        JNB P0.5,Tecla13     
+        JNB P0.6,Tecla23     
+        RET
 
 IDCode1:        
-        JNB P0.4,KeyCode02     
-        JNB P0.5,KeyCode12     
-        JNB P0.6,KeyCode22     
-        Ret
+        JNB P0.4,Tecla02     
+        JNB P0.5,Tecla12     
+        JNB P0.6,Tecla22     
+        RET
 
 IDCode2:        
-        JNB P0.4,KeyCode01    
-        JNB P0.5,KeyCode11     
-        JNB P0.6,KeyCode21
-        Ret
+        JNB P0.4,Tecla01    
+        JNB P0.5,Tecla11     
+        JNB P0.6,Tecla21
+        RET
 
 IDCode3:        
-        JNB P0.4,KeyCode00    
-        JNB P0.5,KeyCode10     
-        JNB P0.6,KeyCode20     
-        Ret
+        JNB P0.4,Tecla00    
+        JNB P0.5,Tecla10     
+        JNB P0.6,Tecla20     
+        RET
 
-KeyCode03:      SETB    F0      
-                Mov     R7,#'3' 
-                Ret
-KeyCode13:      SETB    F0
-                Mov     R7,#'2' 
-                Ret
-KeyCode23:      SETB    F0
-                Mov     R7,#'1' 
-                Ret
+Tecla03:      SETB    F0      
+                MOV     R7,#'3' 
+                RET
+Tecla13:      SETB    F0
+                MOV     R7,#'2' 
+                RET
+Tecla23:      SETB    F0
+                MOV     R7,#'1' 
+                RET
 
-KeyCode02:      SETB    F0
-                Mov     R7,#'6' 
-                Ret
-KeyCode12:      SETB    F0
-                Mov     R7,#'5' 
-                Ret
-KeyCode22:      SETB    F0
-                Mov     R7,#'4' 
-                Ret
+Tecla02:      SETB    F0
+                MOV     R7,#'6' 
+                RET
+Tecla12:      SETB    F0
+                MOV     R7,#'5' 
+                RET
+Tecla22:      SETB    F0
+                MOV     R7,#'4' 
+                RET
 
-KeyCode01:      SETB    F0
-                Mov     R7,#'9' 
-                Ret
-KeyCode11:      SETB    F0
-                Mov     R7,#'8' 
-                Ret
-KeyCode21:      SETB    F0
-                Mov     R7,#'7'
-                Ret
+Tecla01:      SETB    F0
+                MOV     R7,#'9' 
+                RET
+Tecla11:      SETB    F0
+                MOV     R7,#'8' 
+                RET
+Tecla21:      SETB    F0
+                MOV     R7,#'7'
+                RET
 
-KeyCode00:      SETB    F0
-                Mov     R7,#'#' 
-                Ret
-KeyCode10:      SETB    F0
-                Mov     R7,#'0' 
-                Ret
-KeyCode20:      SETB    F0
-                Mov     R7,#'*' 
-                Ret
-      ; --------------------------------- Dados (LUT) --------------------------------
-                              Org     0200h          
-      LUT1:       DB 'B','E','M',' ','V','I','N','D','O',0
-      LUT2:       DB 'J','O','G','O',' ','A','D','I','V','I','N','H','A',0
+Tecla00:      SETB    F0
+                MOV     R7,#'#' 
+                RET
+Tecla10:      SETB    F0
+                MOV     R7,#'0' 
+                RET
+Tecla20:      SETB    F0
+                MOV     R7,#'*' 
+                RET
+; --------------------------------- Dados (LINHA) --------------------------------
+                              ORG     0200h          
+LINHA1:       DB 'B','E','M',' ','V','I','N','D','O',0
+LINHA2:       DB 'J','O','G','O',' ','A','D','I','V','I','N','H','A',0
        
-       
-                              End                     
+END                   
