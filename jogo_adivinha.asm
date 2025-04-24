@@ -5,7 +5,9 @@ E EQU P1.2
 ; ---------------------------------- Main -------------------------------------
 Main:                                           
         CLR RS                     
-        CALL FuncSet         
+		CLR 0h
+
+		CALL FuncSet         
         CALL DispCon         
         CALL EntryMode       
        
@@ -32,7 +34,8 @@ EscreveLinha2: CLR     A
 AguardaComecar:
         CALL    ScanKeyPad      
         CJNE    R7,#'1',AguardaComecar 
-        CLR     RS              
+        CLR     RS
+		SETB    0h              
         MOV     A,#01h          
         CALL    SendChar        
        
@@ -43,6 +46,8 @@ Proximo: CALL    ScanKeyPad
          MOV     A,R7            
          CALL    SendChar        
          CJNE    R7,#'#',Proximo    
+              
+       
               
 EndHere:
         JMP     $               
@@ -149,6 +154,19 @@ Delay:
         RET
 
 ScanKeyPad:
+		JB      0,VerificaTecla
+        MOV     A, R6
+        CJNE    A, #100, Continua
+        MOV     R6, #0
+        JMP     Continua
+
+Continua:
+        INC     R6
+        CLR     F0        
+        CJNE    R7, #'1', VerificaTecla
+        ; Quando R7 for igual a '1', executa normalmente
+
+VerificaTecla:
         CLR     P0.3            
         CALL    IDCode0         
         SETB    P0.3            
@@ -168,11 +186,20 @@ ScanKeyPad:
         CALL    IDCode3         
         SETB    P0.0            
         JB      F0,Feito         
-	CALL    Delay
-        JMP     ScanKeyPad      
 
-Feito:   CLR     F0              
+        CALL    Delay
+        JMP     ScanKeyPad        ; Loop novamente
+
+Feito:   
+        CLR     F0        
+        CJNE    R7, #'1', Retorna
+        MOV     A, R6           
+        CJNE    A, #100, Retorna
+        MOV     R6, #0       
+
+Retorna:
         RET
+
 
 IDCode0:        
         JNB P0.4,Tecla03     
@@ -198,48 +225,64 @@ IDCode3:
         JNB P0.6,Tecla20     
         RET
 
-Tecla03:      SETB    F0      
-                MOV     R7,#'3' 
+Tecla03:        SETB    F0      
+                MOV     R7,#'3'
+JNB P0.4,$ 
                 RET
-Tecla13:      SETB    F0
-                MOV     R7,#'2' 
+Tecla13:        SETB    F0
+                MOV     R7,#'2'
+JNB P0.5,$ 
                 RET
-Tecla23:      SETB    F0
-                MOV     R7,#'1' 
+Tecla23:        SETB    F0
+                MOV     R7,#'1'
+JNB P0.6,$ 
                 RET
 
-Tecla02:      SETB    F0
+Tecla02:        SETB    F0
                 MOV     R7,#'6' 
+JNB P0.4,$
                 RET
-Tecla12:      SETB    F0
+Tecla12:        SETB    F0
                 MOV     R7,#'5' 
+JNB P0.5,$
                 RET
-Tecla22:      SETB    F0
+Tecla22:        SETB    F0
                 MOV     R7,#'4' 
+JNB P0.6,$
                 RET
 
-Tecla01:      SETB    F0
+Tecla01:        SETB    F0
                 MOV     R7,#'9' 
+JNB P0.4,$
                 RET
-Tecla11:      SETB    F0
+Tecla11:        SETB    F0
                 MOV     R7,#'8' 
+JNB P0.5,$
                 RET
-Tecla21:      SETB    F0
+Tecla21:        SETB    F0
                 MOV     R7,#'7'
+JNB P0.6,$
                 RET
 
-Tecla00:      SETB    F0
+Tecla00:        SETB    F0
                 MOV     R7,#'#' 
+JNB P0.4,$
                 RET
-Tecla10:      SETB    F0
-                MOV     R7,#'0' 
+Tecla10:        SETB    F0
+                MOV     R7,#'0'
+JNB P0.5,$  
                 RET
-Tecla20:      SETB    F0
+Tecla20:        SETB    F0
                 MOV     R7,#'*' 
+JNB P0.6,$
+				
                 RET
+
+
 ; --------------------------------- Dados (LINHA) --------------------------------
+
                               ORG     0200h          
 LINHA1:       DB 'B','E','M',' ','V','I','N','D','O',0
 LINHA2:       DB 'J','O','G','O',' ','A','D','I','V','I','N','H','A',0
        
-END                   
+END
