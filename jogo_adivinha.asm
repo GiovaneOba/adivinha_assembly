@@ -60,7 +60,8 @@ teste12:
 	SUBB A, R7    ; A = A - R7 (com carry)
 	JNZ erro      ; Se o resultado não é zero -> são diferentes
 	; Se cair aqui, é porque são iguais
-	LCALL correto
+	JZ correto
+	RET
 	
 
 erro:
@@ -100,10 +101,17 @@ ProximaLinha3:
         MOV     DPTR,#LINHA4      
 EscreveLinha23: CLR     A
         MOVC    A,@A+DPTR       
-        JZ      Main       
+        JZ      TESTE       
         CALL    SendChar        
         INC     DPTR
       	JMP     EscreveLinha23
+TESTE:
+		CLR     RS
+   		MOV     A,#01h          ; comando de clear display
+   		CALL    SendChar
+   		CALL    Delay
+		CALL 	Delay           ; espere um pouco após limpar
+    	JMP     $
 
         
 
