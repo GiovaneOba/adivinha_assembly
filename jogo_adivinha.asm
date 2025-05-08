@@ -80,7 +80,7 @@ ProximaLinha2:
         MOV     DPTR,#LINHA5      
 EscreveLinha22: CLR     A
         MOVC    A,@A+DPTR       
-        JZ      Proximo       
+        JZ      RAIO       
         CALL    SendChar        
         INC     DPTR
       	JMP     EscreveLinha22
@@ -107,21 +107,22 @@ EscreveLinha23: CLR     A
       	JMP     EscreveLinha23
 TESTE:
 		CLR     RS
-   		MOV     A,#01h          ; comando de clear display
+   		MOV     A,#01h         
    		CALL    SendChar
    		CALL    Delay
-		CALL 	Delay           ; espere um pouco após limpar
+		CALL 	Delay2          
     	JMP     $
+RAIO: 
+		CALL Delay
+   		CALL    Delay2
+		CLR     RS
+   		MOV     A,#01h          ; comando de clear display
+   		CALL    SendChar
+		JMP Proximo
+		
 
-        
 
-escreveErro:
-        CLR A
-        MOVC A, @A + DPTR
-		JZ      ProximaLinha        
-        CALL    SendChar        
-        INC     DPTR            
-        JMP     escreveErro
+
        ; Carrega o primeiro caractere da string em A
 ;EscreveTexto:
  ;       JZ FimTexto               ; Se A == 0 (fim da string), sai do loop
@@ -229,6 +230,11 @@ Delay:
         MOV     R0,#50          
 	DJNZ    R0,$         
         RET
+Delay2:
+        MOV     R0,#100          
+	DJNZ    R0,$         
+        RET
+
 
 ScanKeyPad:
 		JB      0,VerificaTecla
@@ -362,7 +368,7 @@ JNB P0.6,$
 LINHA1:       DB 'B','E','M',' ','V','I','N','D','O',0
 LINHA2:       DB 'J','O','G','O',' ','A','D','I','V','I','N','H','A',0
 LINHA4: DB 'A','C','E','R','T','O','U',0
-LINHA5: DB 'I','N','C','O','R','R','E','T','O',0
+LINHA5: DB 'E','R','R','O','U',0
 LINHA3: DB 'V','O','C','E',0
        
 END
