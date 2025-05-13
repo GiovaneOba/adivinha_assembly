@@ -45,7 +45,7 @@ Proximo: CALL    ScanKeyPad
          CLR     A
          CALL    teste12
 		                    
-    ;     CJNE    R7,#'#',Proximo    
+       
               
        
               
@@ -56,10 +56,11 @@ EndHere:
 
 ;--------------------------------- Sub-rotinas ----------------------------------
 teste12:
+	CLR C 
 	MOV A, R6     ; A = valor1
 	SUBB A, R7    ; A = A - R7 (com carry)
 	JNZ erro      ; Se o resultado não é zero -> são diferentes
-	; Se cair aqui, é porque são iguais
+                  ; Se cair aqui, é porque são iguais
 	JZ correto
 	RET
 	
@@ -121,17 +122,6 @@ RAIO:
 		JMP Proximo
 		
 
-
-
-       ; Carrega o primeiro caractere da string em A
-;EscreveTexto:
- ;       JZ FimTexto               ; Se A == 0 (fim da string), sai do loop
-  ;      CALL SendChar             ; Envia o caractere para o LCD
-   ;     INC DPTR                  ; Avança o ponteiro para o próximo caractere
-    ;    MOVC A, @A + DPTR         ; Carrega o próximo caractere de DPTR
-     ;   JMP EscreveTexto          ; Continua o loop
-;FimTexto:
-;        RET
 
 FuncSet:
         CLR     P1.7            
@@ -247,7 +237,7 @@ Continua:
         INC     R6
         CLR     F0        
         CJNE    R7, #1, VerificaTecla
-        ; Quando R7 for igual a '1', executa normalmente
+        									; Quando R7 for igual a '1', executa
 
 VerificaTecla:
         CLR     P0.3            
