@@ -88,7 +88,7 @@ EscreveLinha22: CLR     A
 
 correto:
 SetB RS              
-        MOV     DPTR,#LINHA3      
+        MOV     DPTR,#LINHA6      
 EscreveLinha13: CLR     A               
         MOVC    A,@A+DPTR       
         JZ      ProximaLinha3        
@@ -357,8 +357,9 @@ JNB P0.6,$
                               ORG     0200h          
 LINHA1:       DB 'B','E','M',' ','V','I','N','D','O',0
 LINHA2:       DB 'J','O','G','O',' ','A','D','I','V','I','N','H','A',0
-LINHA4: DB 'A','C','E','R','T','O','U',0
+LINHA4: DB 'G','A','M','E',' ','O','V','E','R',0
 LINHA5: DB 'E','R','R','O','U',0
 LINHA3: DB 'V','O','C','E',0
+LINHA6: DB 'V','O','C','E',' ','A','C','E','R','T','O','U',0
        
 END
