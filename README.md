@@ -84,5 +84,8 @@ Adicionar controle de tentativas e possíveis limites de jogo.
 
 Melhorar a usabilidade e apresentação no LCD.
 
+[FLUXOGRAMA.pdf](https://github.com/user-attachments/files/20265396/FLUXOGRAMA.pdf)
+
+
 Considerações Finais
 Este relatório parcial documenta o progresso atual do projeto. Apesar de ainda não estar finalizado, a base do sistema já está construída e testada. As interações principais com o teclado e o display estão funcionando corretamente, o que permite continuar com as funcionalidades de comparação e dicas no jogo.
