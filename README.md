@@ -1,91 +1,47 @@
-Relatório Parcial - Jogo de Adivinhação em Assembly (8051)
-Descrição do Projeto
-Este projeto tem como objetivo implementar um jogo de adivinhação utilizando o simulador EdSim51, baseado no microcontrolador 8051. O sistema faz uso de dois dispositivos principais para a interação com o usuário:
+🎮 Jogo de Adivinhação em Assembly (8051)
 
-Display LCD: Responsável por exibir mensagens e feedback ao jogador.
+Projeto desenvolvido na disciplina de Arquitetura de Computadores no curso de Ciência da Computação da FEI. O objetivo foi implementar um jogo de adivinhação no simulador EdSim51, utilizando o microcontrolador 8051, display LCD e teclado matricial (keypad) como dispositivos de entrada e saída.
 
-Teclado Matricial (Keypad): Usado para entrada de dados, como iniciar o jogo e digitar os números.
+🧠 Descrição do Projeto
 
-Funcionamento Geral
-O fluxo de funcionamento do jogo é o seguinte:
+O sistema gera automaticamente um número aleatório de 0 a 9 e aguarda o usuário iniciar o jogo pressionando a tecla 1. A interação acontece por meio do keypad, onde o jogador tenta adivinhar o número sorteado. O LCD exibe mensagens como:
 
-Mensagem de boas-vindas: Assim que o sistema é ligado, uma mensagem é exibida no display LCD para recepcionar o usuário.
+Boas-vindas
 
-Início do jogo: O usuário deve pressionar a tecla # no teclado para iniciar o jogo.
+Indicação de erro e tentativa novamente
 
-Geração do número aleatório: Após o início, o sistema irá gerar um número aleatório que o jogador deverá adivinhar.
+Mensagem de sucesso ("Você acertou!")
 
-Entrada do jogador: O jogador digita um número no teclado e confirma pressionando #.
+Mensagem de término ("Game Over")
 
-Verificação e dicas: O sistema compara a tentativa com o número alvo:
+A lógica do jogo foi construída de forma modular, com sub-rotinas responsáveis pelo envio de dados ao display, escaneamento das teclas e comparação dos valores.
 
-Se for correto, uma mensagem de parabéns é exibida.
+📷 Funcionalidades em destaque
 
-Se for incorreto, o sistema pode dar dicas como “maior” ou “menor”.
+Exibição de mensagens dinâmicas no LCD.
 
-Status Atual
-Até o momento, as seguintes funcionalidades já estão implementadas e testadas:
+Geração pseudoaleatória de número com base no tempo de espera.
 
-Exibição da mensagem de boas-vindas no display LCD.
+Leitura eficiente do teclado matricial.
 
-Início do jogo com a tecla #.
+Feedback visual claro para acertos e erros.
 
-Captura de entrada do usuário via teclado.
+Organização em sub-rotinas para facilitar manutenção e expansão.
 
-Exibição dos caracteres digitados no LCD.
+🛠️ Tecnologias e Ferramentas
 
-Trecho do Código (Assembly)
-Abaixo está parte do código Assembly desenvolvido até agora:
+Assembly (8051)
 
-asm
-Copiar
-Editar
-Org     0000h          
-RS      Equ     P1.3           
-E       Equ     P1.2           
+Simulador EdSim51
 
-Main:                                           
-    Clr     RS                     
-    Call    FuncSet         
-    Call    DispCon         
-    Call    EntryMode       
-    SetB    RS              
-    Mov     DPTR,#LUT1      
-Print1:  
-    Clr     A               
-    Movc    A,@A+DPTR       
-    JZ      NextLine        
-    Call    SendChar        
-    Inc     DPTR            
-    Jmp     Print1          
+Display LCD 16x2
 
-NextLine:
-    Call    CursorPos       
-    SetB    RS              
-    Mov     DPTR,#LUT2      
-Print2:  
-    Clr     A
-    Movc    A,@A+DPTR       
-    JZ      WaitStart       
-    Call    SendChar        
-    Inc     DPTR
-    Jmp     Print2          
+Teclado matricial 4x3
 
-Próximos Passos
-As próximas etapas do projeto incluem:
+📌 Objetivo Educacional
 
-Implementar a lógica de geração do número aleatório.
+Este projeto teve como foco proporcionar uma aplicação prática de conceitos como controle de periféricos, programação em baixo nível e manipulação de bits, essenciais para o desenvolvimento de sistemas embarcados.
 
-Comparar a tentativa do jogador com o número gerado.
+✅ Conclusão
 
-Exibir mensagens de feedback como "maior" ou "menor".
-
-Adicionar controle de tentativas e possíveis limites de jogo.
-
-Melhorar a usabilidade e apresentação no LCD.
-
-[FLUXOGRAMA.pdf](https://github.com/user-attachments/files/20265396/FLUXOGRAMA.pdf)
-
-
-Considerações Finais
-Este relatório parcial documenta o progresso atual do projeto. Apesar de ainda não estar finalizado, a base do sistema já está construída e testada. As interações principais com o teclado e o display estão funcionando corretamente, o que permite continuar com as funcionalidades de comparação e dicas no jogo.
+A aplicação final demonstrou uma integração sólida entre software e hardware simulado, com fluxo de execução coerente e feedback eficaz para o usuário. O projeto serviu como base para o entendimento de sistemas interativos embarcados, podendo ser expandido com novas funcionalidades, como múltiplas rodadas, modos de dificuldade ou integração com comunicação serial.
